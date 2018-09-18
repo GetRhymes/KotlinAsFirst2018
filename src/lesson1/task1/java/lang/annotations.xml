@@ -1,0 +1,5 @@
+<root>
+    <item name='java.lang.Math double pow(double, double)'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+</root>
