@@ -1,9 +1,11 @@
 package lesson2.task1
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
+
+@Suppress("UNREACHABLE_CODE")
 class Tests {
     @Test
     @Tag("Example")
