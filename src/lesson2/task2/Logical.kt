@@ -44,9 +44,9 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = abs(x1 - x2) =
 fun daysInMonth(month: Int, year: Int): Int = when {
     (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) && month == 2 -> 29
     month == 2 -> 28
-    month == 8 -> 31
-    month % 2 == 0 -> 30
-    else -> 31
+    month < 8 && month % 2 == 0 -> 30
+    month >= 8 && month % 2 == 0 || month < 8 && month % 2 != 2 -> 31
+    else -> 30
 }
 
 /**
