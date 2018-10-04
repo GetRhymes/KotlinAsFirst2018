@@ -140,8 +140,10 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
 fun isCoPrime(m: Int, n: Int): Boolean {
     val min = minOf(m, n)
     val max = maxOf(m, n)
-    for (i in 2..min / 2)
-        return (m % i != 0 && n % i == 0 || m % i == 0 && n % i != 0 || m % i != 0 && n % i != 0) && max % min != 0
+    if ((max == 1) || (min == 1)) true
+    else
+        for (i in 2..min / 2)
+            return (m % i != 0 && n % i == 0 || m % i == 0 && n % i != 0 || m % i != 0 && n % i != 0) && max % min != 0
     return false
 }
 
