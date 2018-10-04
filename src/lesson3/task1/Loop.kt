@@ -140,9 +140,9 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
 fun isCoPrime(m: Int, n: Int): Boolean {
     val min = minOf(m, n)
     val max = maxOf(m, n)
+    if (min == 1) return true
     for (i in 2..min / 2)
-        return (m % i != 0 && n % i == 0 || m % i == 0 && n % i != 0 || m % i != 0 && n % i != 0)
-                && max % min != 0 && max / min != max
+        return (m % i != 0 && n % i == 0 || m % i == 0 && n % i != 0 || m % i != 0 && n % i != 0) && max % min != 0
     return false
 }
 
@@ -224,7 +224,6 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean = n == revert(n)
-
 
 /**
  * Средняя
