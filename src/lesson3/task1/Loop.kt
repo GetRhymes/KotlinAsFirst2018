@@ -2,6 +2,8 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
+import java.lang.Math.pow
 import kotlin.math.sqrt
 
 /**
@@ -83,7 +85,17 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n == 1 || n == 2) 1 else fib(n - 1) + fib(n - 2)
+fun fib(n: Int): Int {
+    val arr = arrayOf(1, 1)
+    var temp = 0
+    if (n == 1 || n == 2) return 1
+    for (i in 3..n) {
+        temp = arr[0] + arr[1]
+        arr[0] = arr[1]
+        arr[1] = temp
+    }
+    return temp
+}
 
 /**
  * Простая
@@ -110,18 +122,13 @@ fun minDivisor(n: Int): Int {
         if (n % i == 0) return i
     return n
 }
+
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    if (isPrime(n)) return 1
-    for (i in n / 2 downTo 2)
-        if (n % i == 0) return i
-    return n
-}
-
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -130,7 +137,13 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    val min = minOf(m, n)
+    val max = maxOf(m, n)
+    for (i in 2..min / 2)
+        return (m % i != 0 && n % i == 0 || m % i == 0 && n % i != 0 || m % i != 0 && n % i != 0) && max % min != 0
+    return false
+}
 
 /**
  * Простая
@@ -139,7 +152,12 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    for (i in (sqrt(m.toDouble()).toInt())..(sqrt(n.toDouble()).toInt())) {
+        if (sqr(i) in m..n) return true
+    }
+    return false
+}
 
 /**
  * Средняя
@@ -184,7 +202,16 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var inverse = 0
+    var k = n
+    while (k > 0) {
+        inverse = inverse * 10 + k % 10
+        k /= 10
+    }
+    return inverse
+}
+
 
 /**
  * Средняя
@@ -195,7 +222,8 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = n == revert(n)
+
 
 /**
  * Средняя
@@ -209,14 +237,29 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
 
 /**
  * Сложная
- *
+ *100 - 16 00 - 17 0 -18
  * Найти n-ю цифру последовательности из квадратов целых чисел:
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var count = 0
+    var number = 0
+    var case = 0
+    while (count < n) {
+        number++
+        case = digitNumber(sqr(number))
+        count += case
+    }
+    return when {
+        count > 3 && count == n -> sqr(number) % 10
+        count <= 3 -> sqr(number)
+        count > n -> (sqr(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
+        else -> 0
+    }
+}
 
 /**
  * Сложная
@@ -227,4 +270,20 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var count = 0
+    var number = 0
+    var case = 0
+    while (count < n) {
+        number++
+        case = digitNumber(fib(number))
+        count += case
+    }
+    return when {
+        count > 6 && count == n -> fib(number) % 10
+        count <= 6 -> fib(number)
+        count > n -> (fib(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
+        else -> 0
+    }
+
+}
