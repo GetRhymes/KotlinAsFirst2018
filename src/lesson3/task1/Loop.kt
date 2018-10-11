@@ -3,7 +3,9 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.floor
 import java.lang.Math.pow
+import kotlin.math.ceil
 import kotlin.math.sqrt
 
 /**
@@ -86,13 +88,14 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    val arr = arrayOf(1, 1)
+    var preElement = 1
+    var nextElement = 1
     var temp = 0
     if (n == 1 || n == 2) return 1
     for (i in 3..n) {
-        temp = arr[0] + arr[1]
-        arr[0] = arr[1]
-        arr[1] = temp
+        temp = preElement + nextElement
+        preElement = nextElement
+        nextElement = temp
     }
     return temp
 }
@@ -138,10 +141,10 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var myVariable = 0
     var firstVariable = n
     var secondVariable = m
     while (secondVariable != 0) {
+        var myVariable = 0
         myVariable = firstVariable % secondVariable
         firstVariable = secondVariable
         secondVariable = myVariable
@@ -156,12 +159,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in (sqrt(m.toDouble()).toInt())..(sqrt(n.toDouble()).toInt())) {
-        if (sqr(i) in m..n) return true
-    }
-    return false
-}
+fun squareBetweenExists(m: Int, n: Int): Boolean = ceil(sqrt(m.toDouble())) <= floor(sqrt(n.toDouble()))
 
 /**
  * Средняя
@@ -247,22 +245,7 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
-    var count = 0
-    var number = 0
-    var case = 0
-    while (count < n) {
-        number++
-        case = digitNumber(sqr(number))
-        count += case
-    }
-    return when {
-        count > 3 && count == n -> sqr(number) % 10
-        count <= 3 -> sqr(number)
-        count > n -> (sqr(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
-        else -> 0
-    }
-}
+fun squareSequenceDigit(n: Int): Int = universal(n, 3, ::sqr)
 
 /**
  * Сложная
@@ -273,20 +256,21 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
+fun fibSequenceDigit(n: Int): Int = universal(n, 6, ::fib)
+
+fun universal(n: Int, k: Int, func: (n: Int) -> Int): Int {
     var count = 0
     var number = 0
     var case = 0
     while (count < n) {
         number++
-        case = digitNumber(fib(number))
+        case = digitNumber(func(number))
         count += case
     }
     return when {
-        count > 6 && count == n -> fib(number) % 10
-        count <= 6 -> fib(number)
-        count > n -> (fib(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
+        count > k && count == n -> func(number) % 10
+        count <= k -> func(number)
+        count > n -> (func(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
         else -> 0
     }
-
 }
