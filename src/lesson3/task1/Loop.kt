@@ -90,14 +90,13 @@ fun digitNumber(n: Int): Int {
 fun fib(n: Int): Int {
     var preElement = 1
     var nextElement = 1
-    var temp = 0
     if (n == 1 || n == 2) return 1
     for (i in 3..n) {
-        temp = preElement + nextElement
+        val temp = preElement + nextElement
         preElement = nextElement
         nextElement = temp
     }
-    return temp
+    return nextElement
 }
 
 /**
@@ -144,8 +143,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var firstVariable = n
     var secondVariable = m
     while (secondVariable != 0) {
-        var myVariable = 0
-        myVariable = firstVariable % secondVariable
+        val myVariable = firstVariable % secondVariable
         firstVariable = secondVariable
         secondVariable = myVariable
     }
@@ -245,7 +243,7 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = universal(n, 3, ::sqr)
+fun squareSequenceDigit(n: Int): Int = universal(n, ::sqr)
 
 /**
  * Сложная
@@ -256,9 +254,9 @@ fun squareSequenceDigit(n: Int): Int = universal(n, 3, ::sqr)
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = universal(n, 6, ::fib)
+fun fibSequenceDigit(n: Int): Int = universal(n, ::fib)
 
-fun universal(n: Int, k: Int, func: (n: Int) -> Int): Int {
+fun universal(n: Int, func: (n: Int) -> Int): Int {
     var count = 0
     var number = 0
     var case = 0
@@ -267,10 +265,5 @@ fun universal(n: Int, k: Int, func: (n: Int) -> Int): Int {
         case = digitNumber(func(number))
         count += case
     }
-    return when {
-        count > k && count == n -> func(number) % 10
-        count <= k -> func(number)
-        count > n -> (func(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
-        else -> 0
-    }
+    return (func(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
 }
