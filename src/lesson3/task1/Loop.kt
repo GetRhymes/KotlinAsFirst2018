@@ -259,10 +259,9 @@ fun fibSequenceDigit(n: Int): Int = universal(n, ::fib)
 fun universal(n: Int, func: (n: Int) -> Int): Int {
     var count = 0
     var number = 0
-    var case = 0
     while (count < n) {
         number++
-        case = digitNumber(func(number))
+        val case = digitNumber(func(number))
         count += case
     }
     return (func(number) / pow(10.0, (count - n).toDouble())).toInt() % 10
