@@ -123,11 +123,7 @@ fun abs(v: List<Double>): Double = sqrt(v.map { it * it }.sum())
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    return if (list.isNotEmpty()) list.sum() / list.size
-    else 0.0
-}
-
+fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.size else 0.0
 
 /**
  * Средняя
@@ -167,13 +163,11 @@ fun times(a: List<Double>, b: List<Double>): Double {
  * Значение пустого многочлена равно 0.0 при любом x.
  */
 fun polynom(p: List<Double>, x: Double): Double {
-    return if (p.isEmpty()) 0.0
-    else {
-        var px = p[0]
-        for (i in 1 until p.size) px += p[i] * pow(x, i.toDouble())
-        return px
-    }
+    var px = 0.0
+    for (i in 0 until p.size) px += p[i] * pow(x, i.toDouble())
+    return px
 }
+
 
 /**
  * Средняя
@@ -229,6 +223,7 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     var nowN = n
     val newList = mutableListOf<Int>()
+    if (n == 0) return listOf(n)
     while (nowN != 0) {
         newList.add(0, nowN % base)
         nowN /= base
@@ -244,11 +239,10 @@ fun convert(n: Int, base: Int): List<Int> {
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
-// convert(n, base).joinToString(
-// separator = "",
-// transform = { if (it > 9) ('a' + it - 10).toString() else "$it" }
-//)
+fun convertToString(n: Int, base: Int): String = convert(n, base).joinToString(
+        separator = "",
+        transform = { if (it > 9) ('a' + it - 10).toString() else "$it" }
+)
 
 /**
  * Средняя
@@ -273,7 +267,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun latinTranslate(symbol: Char): Int = if (symbol < 'a') symbol - '0' else symbol - 'a' + 10
+
+fun decimalFromString(str: String, base: Int): Int {
+    val caseString = str.toList().map { latinTranslate(it) }
+    return decimal(caseString, base)
+}
 
 /**
  * Сложная
