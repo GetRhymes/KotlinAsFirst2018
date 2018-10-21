@@ -291,4 +291,38 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val packageBase1 = arrayOf("ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val packageBase2 = arrayOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
+            "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+    val packageBase3 = arrayOf("", "десять", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят",
+            "восемьдесят", "девяносто")
+    val packageBase4 = arrayOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот",
+            "девятьсот")
+    val packageBaseForm1 = arrayOf("тысяч", "тысячи", "тысеча")
+    val packageForm2 = arrayOf("ноль", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    var wordNumber = ""
+    val moreFourSymbol = n / 1000
+    val lessFourSymbol = n % 1000
+    if (moreFourSymbol > 0) {
+        if (moreFourSymbol / 100 != 0) wordNumber += packageBase4[moreFourSymbol / 100] + " "
+        wordNumber += if (moreFourSymbol % 100 in 11..19) packageBase2[moreFourSymbol % 10] + " "
+        else packageBase3[moreFourSymbol / 10 % 10] + " "
+        if (moreFourSymbol % 10 != 0 && moreFourSymbol % 100 !in 11..19)
+            wordNumber += packageForm2[moreFourSymbol % 10] + " "
+        if (moreFourSymbol % 10 == 0 || moreFourSymbol / 100 in 11..19) wordNumber += packageBaseForm1[0] + " "
+        else when (moreFourSymbol % 10) {
+            1 -> wordNumber += packageBaseForm1[2] + " "
+            in 2..4 -> wordNumber += packageBaseForm1[1] + " "
+            in 5..9 -> wordNumber += packageBaseForm1[0] + " "
+        }
+    }
+    if (lessFourSymbol > 0) {
+        if (lessFourSymbol / 100 != 0) wordNumber += packageBase4[lessFourSymbol / 100] + " "
+        wordNumber += if (lessFourSymbol % 100 in 10..19) packageBase2[lessFourSymbol % 10] + " "
+        else packageBase3[lessFourSymbol / 10 % 10] + " "
+        if (lessFourSymbol % 10 != 0 && lessFourSymbol % 100 !in 11..19)
+            wordNumber += packageBase1[lessFourSymbol % 10]
+    }
+    return wordNumber.replace("  ", " ").trim()
+}
