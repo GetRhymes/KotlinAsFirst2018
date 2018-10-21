@@ -299,7 +299,7 @@ fun russian(n: Int): String {
             "восемьдесят", "девяносто")
     val packageBase4 = arrayOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот",
             "девятьсот")
-    val packageBaseForm1 = arrayOf("тысяч", "тысячи", "тысеча")
+    val packageBaseForm1 = arrayOf("тысяч", "тысячи", "тысяча")
     val packageForm2 = arrayOf("ноль", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     var wordNumber = ""
     val moreFourSymbol = n / 1000
