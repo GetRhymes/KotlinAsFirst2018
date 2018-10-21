@@ -310,7 +310,7 @@ fun russian(n: Int): String {
         else packageBase3[moreFourSymbol / 10 % 10] + " "
         if (moreFourSymbol % 10 != 0 && moreFourSymbol % 100 !in 11..19)
             wordNumber += packageForm2[moreFourSymbol % 10] + " "
-        if (moreFourSymbol % 10 == 0 || moreFourSymbol / 100 in 11..19) wordNumber += packageBaseForm1[0] + " "
+        if (moreFourSymbol % 10 == 0 || moreFourSymbol % 100 in 11..19) wordNumber += packageBaseForm1[0] + " "
         else when (moreFourSymbol % 10) {
             1 -> wordNumber += packageBaseForm1[2] + " "
             in 2..4 -> wordNumber += packageBaseForm1[1] + " "
