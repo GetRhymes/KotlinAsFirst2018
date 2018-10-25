@@ -316,7 +316,7 @@ fun russian(n: Int): String {
     if (lessFourSymbol != 0) {
         universalForRussia(lessFourSymbol, wordNumber, packageBase1, packageBase2, packageBase3, packageBase4)
     }
-    return wordNumber.joinToString(separator = " ").replace("  ", " ").trim()
+    return wordNumber.filter { it != "" }.joinToString(separator = " ")
 }
 
 fun universalForRussia(k: Int, list: MutableList<String>, mas1: Array<String>, mas2: Array<String>,
