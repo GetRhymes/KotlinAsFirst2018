@@ -301,28 +301,30 @@ fun russian(n: Int): String {
             "девятьсот")
     val packageBaseForm1 = arrayOf("тысяч", "тысячи", "тысяча")
     val packageForm2 = arrayOf("ноль", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-    var wordNumber = ""
+    var wordNumber = mutableListOf<String>()
     val moreFourSymbol = n / 1000
     val lessFourSymbol = n % 1000
-    if (moreFourSymbol > 0) {
-        if (moreFourSymbol / 100 != 0) wordNumber += packageBase4[moreFourSymbol / 100] + " "
-        wordNumber += if (moreFourSymbol % 100 in 11..19) packageBase2[moreFourSymbol % 10] + " "
-        else packageBase3[moreFourSymbol / 10 % 10] + " "
-        if (moreFourSymbol % 10 != 0 && moreFourSymbol % 100 !in 11..19)
-            wordNumber += packageForm2[moreFourSymbol % 10] + " "
-        if (moreFourSymbol % 10 == 0 || moreFourSymbol % 100 in 11..19) wordNumber += packageBaseForm1[0] + " "
+    if (moreFourSymbol != 0) {
+        universalForRussia(moreFourSymbol, wordNumber, packageForm2, packageBase2, packageBase3, packageBase4)
+        if (moreFourSymbol % 10 == 0 || moreFourSymbol % 100 in 11..19) wordNumber.add(packageBaseForm1[0])
         else when (moreFourSymbol % 10) {
-            1 -> wordNumber += packageBaseForm1[2] + " "
-            in 2..4 -> wordNumber += packageBaseForm1[1] + " "
-            in 5..9 -> wordNumber += packageBaseForm1[0] + " "
+            1 -> wordNumber.add(packageBaseForm1[2])
+            in 2..4 -> wordNumber.add(packageBaseForm1[1])
+            in 5..9 -> wordNumber.add(packageBaseForm1[0])
         }
     }
-    if (lessFourSymbol > 0) {
-        if (lessFourSymbol / 100 != 0) wordNumber += packageBase4[lessFourSymbol / 100] + " "
-        wordNumber += if (lessFourSymbol % 100 in 10..19) packageBase2[lessFourSymbol % 10] + " "
-        else packageBase3[lessFourSymbol / 10 % 10] + " "
-        if (lessFourSymbol % 10 != 0 && lessFourSymbol % 100 !in 11..19)
-            wordNumber += packageBase1[lessFourSymbol % 10]
+    if (lessFourSymbol != 0) {
+        universalForRussia(lessFourSymbol, wordNumber, packageBase1, packageBase2, packageBase3, packageBase4)
     }
-    return wordNumber.replace("  ", " ").trim()
+    return wordNumber.joinToString(separator = " ").replace("  ", " ").trim()
+}
+
+fun universalForRussia(k: Int, list: MutableList<String>, mas1: Array<String>, mas2: Array<String>,
+                       mas3: Array<String>, mas4: Array<String>) {
+    if (k / 100 != 0) list.add(mas4[k / 100])
+    list.add(if (k % 100 in 10..19) mas2[k % 10]
+    else mas3[k / 10 % 10])
+    if (k % 10 != 0 && k % 100 !in 11..19)
+        list.add(mas1[k % 10])
+
 }
