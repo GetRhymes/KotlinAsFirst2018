@@ -169,7 +169,13 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    val listKind = mutableListOf<Double>()
+    stuff.map { if (it.value.first == kind) listKind.add(it.value.second) }
+    val minListKinds = listKind.min()
+    stuff.filter { it.value.first == kind && it.value.second == minListKinds }.map { return it.key }
+    return null
+}
 
 /**
  * Сложная
@@ -215,7 +221,6 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
     for ((key, value) in b) if (value == a[key]) a.remove(key)
 }
 
-
 /**
  * Простая
  *
@@ -232,7 +237,11 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().int
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    val wordSet = word.toSet()
+    for (i in wordSet) return i in chars
+    return false
+}
 
 /**
  * Средняя
@@ -246,7 +255,19 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    val listForCount = list.toMutableList()
+    list.forEach {
+        var count = 0
+        while (it in listForCount) {
+            listForCount.remove(it)
+            count++
+        }
+        if (count > 1) map[it] = count
+    }
+    return map
+}
 
 /**
  * Средняя
@@ -257,7 +278,14 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    val mutMap: MutableMap<List<Char>, String> = mutableMapOf()
+    for (i in words) {
+        if (i.toList().sorted() in mutMap) return true
+        else mutMap += i.toList().sorted() to i
+    }
+    return false
+}
 
 /**
  * Сложная
