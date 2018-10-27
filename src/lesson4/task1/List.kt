@@ -301,7 +301,7 @@ fun russian(n: Int): String {
             "девятьсот")
     val packageBaseForm1 = arrayOf("тысяч", "тысячи", "тысяча")
     val packageForm2 = arrayOf("ноль", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-    var wordNumber = mutableListOf<String>()
+    val wordNumber = mutableListOf<String>()
     val moreFourSymbol = n / 1000
     val lessFourSymbol = n % 1000
     if (moreFourSymbol != 0) {

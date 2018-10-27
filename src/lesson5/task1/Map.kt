@@ -114,7 +114,13 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val mutMap = mutableMapOf<Int, MutableList<String>>()
+    val resultMap = mutableMapOf<Int, List<String>>()
+    grades.forEach { mutMap.getOrPut(it.value, ::mutableListOf).add(it.key) }
+    for ((key, value) in mutMap) resultMap[key] = value.toList().sortedDescending()
+    return resultMap
+}
 
 /**
  * Простая
@@ -138,7 +144,15 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun meanForMutList(list: MutableList<Double>): Double = if (list.isNotEmpty()) list.sum() / list.size else 0.0
+
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val intermediateMap: MutableMap<String, MutableList<Double>> = mutableMapOf()
+    val averageMap: MutableMap<String, Double> = mutableMapOf()
+    stockPrices.forEach { intermediateMap.getOrPut(it.first) { mutableListOf() }.add(it.second) }
+    for ((first, second) in intermediateMap) averageMap[first] = meanForMutList(second)
+    return averageMap
+}
 
 /**
  * Средняя
@@ -207,11 +221,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
  *
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    var listResult = listOf<String>()
-    for (i in a) if (i in b) listResult += i
-    return listResult
-}
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().intersect(b.toSet()).toList()
 
 /**
  * Средняя
