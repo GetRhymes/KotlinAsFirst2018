@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import lesson4.task1.mean
+
 /**
  * Пример
  *
@@ -98,8 +100,8 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     val mutMap = mapA.toMutableMap()
     for ((key, value) in mapB)
         if (mapA.containsKey(key) && mapA[key] != value) {
-            val mutList = listOf(mapA[key], mapB[key]).joinToString()
-            mutMap[key] = mutList
+            val list = listOf(mapA[key], mapB[key]).joinToString()
+            mutMap[key] = list
         } else mutMap[key] = value
     return mutMap
 }
@@ -118,7 +120,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val mutMap = mutableMapOf<Int, MutableList<String>>()
     val resultMap = mutableMapOf<Int, List<String>>()
     grades.forEach { mutMap.getOrPut(it.value, ::mutableListOf).add(it.key) }
-    for ((key, value) in mutMap) resultMap[key] = value.toList().sortedDescending()
+    for ((key, value) in mutMap) resultMap[key] = value.toList()
     return resultMap
 }
 
@@ -144,13 +146,11 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun meanForMutList(list: MutableList<Double>): Double = if (list.isNotEmpty()) list.sum() / list.size else 0.0
-
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val intermediateMap: MutableMap<String, MutableList<Double>> = mutableMapOf()
     val averageMap: MutableMap<String, Double> = mutableMapOf()
     stockPrices.forEach { intermediateMap.getOrPut(it.first) { mutableListOf() }.add(it.second) }
-    for ((first, second) in intermediateMap) averageMap[first] = meanForMutList(second)
+    for ((first, second) in intermediateMap) averageMap[first] = mean(second)
     return averageMap
 }
 
@@ -170,13 +170,9 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    val listKind = mutableListOf<Double>()
-    stuff.map { if (it.value.first == kind) listKind.add(it.value.second) }
-    val minListKinds = listKind.min()
-    stuff.filter { it.value.first == kind && it.value.second == minListKinds }.map { return it.key }
-    return null
+    val list = stuff.filter { it.value.first == kind }
+    return if (list.isEmpty()) null else list.minBy { it.value.second }?.key
 }
-
 /**
  * Сложная
  *
@@ -302,10 +298,9 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val potentialList = list.toMutableList()
+    val potentialList = list.toSet()
     for (i in potentialList) {
-        val variableList = potentialList - i
-        if (number - i in variableList) return Pair(list.indexOf(i), variableList.indexOf(number - i) + 1)
+        if (number - i in (potentialList - i)) return Pair(list.indexOf(i), (potentialList - i).indexOf(number - i) + 1)
     }
     return Pair(-1, -1)
 }
