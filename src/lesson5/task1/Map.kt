@@ -3,6 +3,7 @@
 package lesson5.task1
 
 import lesson4.task1.mean
+import kotlin.math.abs
 
 /**
  * Пример
@@ -148,8 +149,8 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val intermediateMap: MutableMap<String, MutableList<Double>> = mutableMapOf()
-    val averageMap: MutableMap<String, Double> = mutableMapOf()
     stockPrices.forEach { intermediateMap.getOrPut(it.first) { mutableListOf() }.add(it.second) }
+    val averageMap: MutableMap<String, Double> = mutableMapOf()
     for ((first, second) in intermediateMap) averageMap[first] = mean(second)
     return averageMap
 }
@@ -173,6 +174,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     val list = stuff.filter { it.value.first == kind }
     return if (list.isEmpty()) null else list.minBy { it.value.second }?.key
 }
+
 /**
  * Сложная
  *
@@ -298,9 +300,15 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val map = mutableMapOf<Int, Int>()
-    for (i in 0 until list.size) map[list[i]] = i
-    for (el in list) if (number - el in map && map[el] != map[number - el]) return Pair(map[el]!!, map[number - el]!!)
+    val map = mutableMapOf<Int, MutableList<Int>>()
+    for (i in 0 until list.size) {
+        val nowList = list[i]
+        map.getOrPut(nowList) { mutableListOf() }.add(i)
+    }
+    for (el in list) {
+        if (number - el in map && el == number - el && map[el]!!.size > 1) return Pair(map[el]!![0], map[el]!![1])
+        if (number - el in map && el != number - el) return Pair(map[el]!![0], map[abs(number - el)]!![0])
+    }
     return Pair(-1, -1)
 }
 
