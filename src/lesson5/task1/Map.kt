@@ -2,7 +2,6 @@
 
 package lesson5.task1
 
-import lesson4.task1.mean
 import kotlin.math.abs
 
 /**
@@ -147,11 +146,20 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
+fun meanVersionTwo(list: List<Double>): Double {
+    val mutMeanList = mutableListOf<Double>()
+    if (list.isNotEmpty()) {
+        for (i in list)
+            mutMeanList.add(i / list.size)
+    }
+    return mutMeanList.sum()
+}
+
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val intermediateMap: MutableMap<String, MutableList<Double>> = mutableMapOf()
-    stockPrices.forEach { intermediateMap.getOrPut(it.first) { mutableListOf() }.add(it.second) }
     val averageMap: MutableMap<String, Double> = mutableMapOf()
-    for ((first, second) in intermediateMap) averageMap[first] = mean(second)
+    stockPrices.forEach { intermediateMap.getOrPut(it.first) { mutableListOf() }.add(it.second) }
+    for ((first, second) in intermediateMap) averageMap[first] = meanVersionTwo(second)
     return averageMap
 }
 
