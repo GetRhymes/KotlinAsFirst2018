@@ -148,10 +148,8 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = a.all 
  */
 fun meanVersionTwo(list: List<Double>): Double {
     val mutMeanList = mutableListOf<Double>()
-    if (list.isNotEmpty()) {
-        for (i in list)
-            mutMeanList.add(i / list.size)
-    }
+    for (i in list)
+        mutMeanList.add(i / list.size)
     return mutMeanList.sum()
 }
 
