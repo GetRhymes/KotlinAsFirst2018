@@ -178,7 +178,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     val list = stuff.filter { it.value.first == kind }
-    return if (list.isEmpty()) null else list.minBy { it.value.second }?.key
+    return list.minBy { it.value.second }?.key
 }
 
 /**
@@ -258,16 +258,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean =
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
-    val listForCount = list.toMutableList()
-    list.forEach {
-        var count = 0
-        while (it in listForCount) {
-            listForCount.remove(it)
-            count++
-        }
-        if (count > 1) map[it] = count
-    }
-    return map
+    for (i in 0..list.lastIndex) map[list[i]] = map.getOrDefault(list[i], 0) + 1
+    return map.filter { it.value > 1 }
 }
 
 /**
@@ -310,10 +302,10 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in 0 until list.size) {
         val nowList = list[i]
         map.getOrPut(nowList) { mutableListOf() }.add(i)
-    }
-    for (el in list) {
-        if (number - el in map && el == number - el && map[el]!!.size > 1) return Pair(map[el]!![0], map[el]!![1])
-        if (number - el in map && el != number - el) return Pair(map[el]!![0], map[abs(number - el)]!![0])
+        if (number - list[i] in map && list[i] == number - list[i] && map[list[i]]!!.size > 1)
+            return Pair(map[list[i]]!![0], map[list[i]]!![1])
+        if (number - list[i] in map && list[i] != number - list[i])
+            return Pair(map[abs(number - list[i])]!![0], map[list[i]]!![0])
     }
     return Pair(-1, -1)
 }
