@@ -93,15 +93,15 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val parts: List<Int>
+    val parts: List<String>
     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября", "декабря")
     val monthsNow: String
     try {
-        parts = digital.split(".").map { it.toInt() }
+        parts = digital.split(".")
         if (parts.size != 3) throw Exception()
-        monthsNow = months[parts[1] - 1]
-        if (daysInMonth(parts[1], parts[2]) < parts[0]) throw Exception()
+        monthsNow = months[parts[1].toInt() - 1]
+        if (daysInMonth(parts[1].toInt(), parts[2].toInt()) < parts[0].toInt()) throw Exception()
     } catch (e: Exception) {
         return ""
     }
@@ -140,8 +140,8 @@ fun bestLongJump(jumps: String): Int {
     return try {
         val resultWithOutSymbol = jumps
                 .replace(Regex("""[%-]"""), "")
-                .replace(Regex("""\s+"""), " ")
-                .split(" ").map { it.toInt() }
+                .replace(Regex("""(^\s+)|(\s+$)"""), "")
+                .split(Regex("""\s+""")).map { it.toInt() }
         resultWithOutSymbol.maxBy { it }!!
     } catch (e: Exception) {
         -1
