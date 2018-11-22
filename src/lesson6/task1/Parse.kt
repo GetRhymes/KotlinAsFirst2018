@@ -105,7 +105,7 @@ fun dateDigitToStr(digital: String): String {
     } catch (e: Exception) {
         return ""
     }
-    return String.format("%d %s %s", parts[0], monthsNow, parts[2])
+    return String.format("%d %s %s", parts[0].toInt(), monthsNow, parts[2])
 }
 
 /**
@@ -182,12 +182,12 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     var countPlus = 0
     var countMinus = 0
-    if (Regex("""((([1-9]+\d+)|\d)\s(\+|\-)\s)*(([1-9]+\d+)|\d)""").matches(expression)) {
+    if (Regex("""((([1-9]+\d+)|\d)\s([+-])\s)*(([1-9]+\d+)|\d)""").matches(expression)) {
         val plus = expression
-                .replace(Regex("""(\+\s)|(\-\s\d+)"""), "")
+                .replace(Regex("""(\+\s)|(-\s\d+)"""), "")
         Regex("""\d+""").findAll(plus).forEach { countPlus += it.value.toInt() }
         val minus = expression
-                .replace(Regex("""(^\d+)|(\+\s\d+)|\-"""), "")
+                .replace(Regex("""(^\d+)|(\+\s\d+)|-"""), "")
         Regex("""\d+""").findAll(minus).forEach { countMinus += it.value.toInt() }
     } else throw IllegalArgumentException()
     return countPlus - countMinus
@@ -211,7 +211,7 @@ fun firstDuplicateIndex(str: String): Int {
             break
         indexDuplicate += strParts[i].length + 1
     }
-    return if (indexDuplicate == 0) - 1
+    return if (indexDuplicate == 0) -1
     else indexDuplicate
 }
 
