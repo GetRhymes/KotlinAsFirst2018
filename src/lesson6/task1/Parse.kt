@@ -160,12 +160,12 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     return try {
-        val resultWithOutSymbol = jumps
-                .replace(Regex("""\d+\s[%-]+|\s+[+-]+"""), "")
-                .replace(Regex("""\+|\s+$"""), "")
-                .split(Regex("""\s+""")).map { it.toInt() }
-        resultWithOutSymbol.maxBy { it }!!
-    } catch (e: NumberFormatException) {
+        val resultWithOutSymbol = Regex("""\d+ \+""")
+                .findAll(jumps.replace(Regex("[-%]+"), ""))
+                .map { Regex("""\d+""").find(it.value)!!.value.toInt() }
+                .max()
+        resultWithOutSymbol!!
+    } catch (e: Exception) {
         -1
     }
 }
@@ -208,11 +208,10 @@ fun firstDuplicateIndex(str: String): Int {
     val strParts = str.toLowerCase().split(" ")
     for (i in 0 until strParts.size - 1) {
         if (strParts[i] == strParts[i + 1])
-            break
+            return indexDuplicate
         indexDuplicate += strParts[i].length + 1
     }
-    return if (indexDuplicate == 0) -1
-    else indexDuplicate
+    return -1
 }
 
 
