@@ -290,63 +290,67 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var startPoint = cells / 2
     var stopPoint = limit
     var count = 0
-    while (stopPoint != 0 && count < commands.length) {
-        when {
-            (commands[count] == '>') -> {
-                startPoint++
-                count++
-                stopPoint--
-            }
-            (commands[count] == '<') -> {
-                startPoint--
-                count++
-                stopPoint--
-            }
-            (commands[count] == '+') -> {
-                line[startPoint]++
-                count++
-                stopPoint--
-            }
-            (commands[count] == '-') -> {
-                line[startPoint]--
-                count++
-                stopPoint--
-            }
-            (commands[count] == ' ') -> {
-                count++
-                stopPoint--
-            }
-            (commands[count] == '[') -> {
-                if (line[startPoint] == 0) {
-                    var countForCycle = 0
-                    countForCycle--
-                    do {
-                        count++
-                        when (commands[count]) {
-                            '[' -> countForCycle--
-                            ']' -> countForCycle++
-                        }
-                    } while (countForCycle != 0)
+    try {
+        while (stopPoint != 0 && count < commands.length) {
+            when {
+                (commands[count] == '>') -> {
+                    startPoint++
+                    count++
+                    stopPoint--
                 }
-                count++
-                stopPoint--
-            }
-            (commands[count] == ']') -> {
-                if (line[startPoint] != 0) {
-                    var countForCycle = 0
-                    countForCycle++
-                    do {
-                        count--
-                        when (commands[count]) {
-                            '[' -> countForCycle--
-                            ']' -> countForCycle++
-                        }
-                    } while (countForCycle != 0)
+                (commands[count] == '<') -> {
+                    startPoint--
+                    count++
+                    stopPoint--
                 }
-                count++
-                stopPoint--
+                (commands[count] == '+') -> {
+                    line[startPoint]++
+                    count++
+                    stopPoint--
+                }
+                (commands[count] == '-') -> {
+                    line[startPoint]--
+                    count++
+                    stopPoint--
+                }
+                (commands[count] == ' ') -> {
+                    count++
+                    stopPoint--
+                }
+                (commands[count] == '[') -> {
+                    if (line[startPoint] == 0) {
+                        var countForCycle = 0
+                        countForCycle--
+                        do {
+                            count++
+                            when (commands[count]) {
+                                '[' -> countForCycle--
+                                ']' -> countForCycle++
+                            }
+                        } while (countForCycle != 0)
+                    }
+                    count++
+                    stopPoint--
+                }
+                (commands[count] == ']') -> {
+                    if (line[startPoint] != 0) {
+                        var countForCycle = 0
+                        countForCycle++
+                        do {
+                            count--
+                            when (commands[count]) {
+                                '[' -> countForCycle--
+                                ']' -> countForCycle++
+                            }
+                        } while (countForCycle != 0)
+                    }
+                    count++
+                    stopPoint--
+                }
             }
         }
+    } catch (e: java.lang.ArrayIndexOutOfBoundsException){
+        throw IllegalStateException()
     }
     if (startPoint !in 0 until cells) throw IllegalStateException()
     return line
