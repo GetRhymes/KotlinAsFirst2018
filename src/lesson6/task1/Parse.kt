@@ -277,15 +277,14 @@ fun fromRoman(roman: String): Int = TODO()
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (!Regex("""[\s-+\[\]<>]*""").matches(commands)) throw IllegalArgumentException()
-    var exceptionCount1 = 0
-    var exceptionCount2 = 0
+    var exceptionCount = 0
     Regex("""[\[\]]""")
             .findAll(commands)
             .forEach {
-                if (it.value == "[") exceptionCount1++
-                if (it.value == "]") exceptionCount2++
+                if (it.value == "[") exceptionCount++ else exceptionCount--
+                if (exceptionCount < 0) throw IllegalArgumentException()
             }
-    if (exceptionCount1 != exceptionCount2) throw IllegalArgumentException()
+    if (exceptionCount != 0) throw IllegalArgumentException()
     val line = Array(cells) { 0 }.toMutableList()
     var startPoint = cells / 2
     var stopPoint = limit
