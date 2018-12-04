@@ -136,17 +136,16 @@ fun flattenPhoneNumber(phone: String): String {
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int {
-    return try {
-        val resultWithOutSymbol = jumps
-                .replace(Regex("""[%-]"""), "")
-                .replace(Regex("""(^\s+)|(\s+$)"""), "")
-                .split(Regex("""\s+""")).map { it.toInt() }
-        resultWithOutSymbol.maxBy { it }!!
-    } catch (e: Exception) {
-        -1
-    }
+fun bestLongJump(jumps: String): Int = try {
+    val resultWithOutSymbol = jumps
+            .replace(Regex("""[%-]"""), "")
+            .replace(Regex("""(^\s+)|(\s+$)"""), "")
+            .split(Regex("""\s+""")).map { it.toInt() }
+    resultWithOutSymbol.maxBy { it }!!
+} catch (e: Exception) {
+    -1
 }
+
 
 /**
  * Сложная
@@ -158,17 +157,16 @@ fun bestLongJump(jumps: String): Int {
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int {
-    return try {
-        val resultWithOutSymbol = Regex("""\d+ \+""")
-                .findAll(jumps.replace(Regex("[-%]+"), ""))
-                .map { Regex("""\d+""").find(it.value)!!.value.toInt() }
-                .max()
-        resultWithOutSymbol!!
-    } catch (e: Exception) {
-        -1
-    }
+fun bestHighJump(jumps: String): Int = try {
+    val resultWithOutSymbol = Regex("""\d+ \+""")
+            .findAll(jumps.replace(Regex("[-%]+"), ""))
+            .map { Regex("""\d+""").find(it.value)!!.value.toInt() }
+            .max()
+    resultWithOutSymbol!!
+} catch (e: Exception) {
+    -1
 }
+
 
 /**
  * Сложная
@@ -277,4 +275,79 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    if (!Regex("""[\s-+\[\]<>]*""").matches(commands)) throw IllegalArgumentException()
+    var exceptionCount1 = 0
+    var exceptionCount2 = 0
+    Regex("""[\[\]]""")
+            .findAll(commands)
+            .forEach {
+                if (it.value == "[") exceptionCount1++
+                if (it.value == "]") exceptionCount2++
+            }
+    if (exceptionCount1 != exceptionCount2) throw IllegalArgumentException()
+    val line = Array(cells) { 0 }.toMutableList()
+    var startPoint = cells / 2
+    var stopPoint = limit
+    var count = 0
+    while (stopPoint != 0 && count < commands.length) {
+        when {
+            (commands[count] == '>') -> {
+                startPoint++
+                count++
+                stopPoint--
+            }
+            (commands[count] == '<') -> {
+                startPoint--
+                count++
+                stopPoint--
+            }
+            (commands[count] == '+') -> {
+                line[startPoint]++
+                count++
+                stopPoint--
+            }
+            (commands[count] == '-') -> {
+                line[startPoint]--
+                count++
+                stopPoint--
+            }
+            (commands[count] == ' ') -> {
+                count++
+                stopPoint--
+            }
+            (commands[count] == '[') -> {
+                if (line[startPoint] == 0) {
+                    var countForCycle = 0
+                    countForCycle--
+                    do {
+                        count++
+                        when (commands[count]) {
+                            '[' -> countForCycle--
+                            ']' -> countForCycle++
+                        }
+                    } while (countForCycle != 0)
+                }
+                count++
+                stopPoint--
+            }
+            (commands[count] == ']') -> {
+                if (line[startPoint] != 0) {
+                    var countForCycle = 0
+                    countForCycle++
+                    do {
+                        count--
+                        when (commands[count]) {
+                            '[' -> countForCycle--
+                            ']' -> countForCycle++
+                        }
+                    } while (countForCycle != 0)
+                }
+                count++
+                stopPoint--
+            }
+        }
+    }
+    if (startPoint !in 0 until cells) throw IllegalStateException()
+    return line
+}
