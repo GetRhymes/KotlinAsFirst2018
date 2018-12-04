@@ -349,7 +349,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 }
             }
         }
-    } catch (e: java.lang.ArrayIndexOutOfBoundsException){
+    } catch (e: IndexOutOfBoundsException) {
         throw IllegalStateException()
     }
     if (startPoint !in 0 until cells) throw IllegalStateException()
