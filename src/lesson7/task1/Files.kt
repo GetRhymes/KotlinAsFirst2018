@@ -287,7 +287,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
                 .toSet()
                 .joinToString(separator = "")
         if (i == arrayOfSymbol)
-            uniqueWords[i] = arrayOfSymbol.length
+            uniqueWords[i] = i.length
     }
     uniqueWords
             .toList()
