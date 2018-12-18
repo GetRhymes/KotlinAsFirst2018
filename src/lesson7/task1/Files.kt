@@ -148,7 +148,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     for (line in lineList) {
         val words = Regex("""\s+""").split(line)
         val size = words.size - 1
-        if (size > 1 && words.joinToString(separator = " ").length != maxLong) {
+        if (size >= 1 && words.joinToString(separator = " ").length != maxLong) {
             val countS = maxLong - words.joinToString(separator = "").length
             val distance = countS / size
             val del = countS % size
