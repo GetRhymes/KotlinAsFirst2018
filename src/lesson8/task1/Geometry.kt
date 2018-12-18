@@ -122,6 +122,7 @@ fun diameter(vararg points: Point): Segment {
             }
     return Segment(begin, end)
 }
+
 /**
  * Простая
  *
@@ -154,7 +155,11 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
+        val y = (other.b * sin(angle) - b * sin(other.angle)) / sin(angle - other.angle)
+        return Point(x, y)
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
