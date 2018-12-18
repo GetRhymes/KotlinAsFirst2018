@@ -151,10 +151,10 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         if (size > 1 && words.joinToString(separator = " ").length != maxLong) {
             val countS = maxLong - words.joinToString(separator = "").length
             val distance = countS / size
-            val rest = countS % size
-            for (i in 0 until words.size) {
-                val quantity = " ".repeat(distance + if (i < rest) 1 else 0)
-                writer.write(words[i] + if (i != size) quantity else "")
+            val del = countS % size
+            for ((index, value) in words.withIndex()) {
+                val quantity = " ".repeat(distance + if (index < del) 1 else 0)
+                writer.write(value + if (index != size) quantity else "")
             }
         } else writer.write(line)
         writer.newLine()
@@ -296,7 +296,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val list = mutableListOf<String>()
     val maxLength = uniqueWords.maxBy { it.value }
     uniqueWords.forEach {
-        if (it.value == maxLength!!.value) list.add(it.key.toLowerCase().capitalize())
+        if (it.value == maxLength!!.value) list.add(it.key.capitalize())
     }
     val writer = File(outputName).bufferedWriter()
     writer.write(list.joinToString())
