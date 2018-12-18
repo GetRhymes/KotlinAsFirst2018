@@ -142,7 +142,24 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val lineList = File(inputName).readLines().map { it.trim() }
+    val maxLong = lineList.maxBy { it.length }!!.length
+    for (line in lineList) {
+        val words = Regex("""\s+""").split(line)
+        val size = words.size - 1
+        if (size > 1 && words.joinToString(separator = " ").length != maxLong) {
+            val countS = maxLong - words.joinToString(separator = "").length
+            val distance = countS / size
+            val rest = countS % size
+            for (i in 0 until words.size) {
+                val quantity = " ".repeat(distance + if (i < rest) 1 else 0)
+                writer.write(words[i] + if (i != size) quantity else "")
+            }
+        } else writer.write(line)
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
@@ -279,7 +296,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val list = mutableListOf<String>()
     val maxLength = uniqueWords.maxBy { it.value }
     uniqueWords.forEach {
-        if (it.value == maxLength!!.value) list.add(it.key.capitalize())
+        if (it.value == maxLength!!.value) list.add(it.key.toLowerCase().capitalize())
     }
     val writer = File(outputName).bufferedWriter()
     writer.write(list.joinToString())
