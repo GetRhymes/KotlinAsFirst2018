@@ -1,8 +1,10 @@
 @file:Suppress("UNUSED_PARAMETER", "DEPRECATION")
+
 package lesson1.task1
 
 import java.lang.Math.pow
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.sqrt
 
 /**
  * Пример
@@ -82,6 +84,7 @@ fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
     val y = sec / 3600.0
     return (x + y + grad) * PI / 180.0
 }
+
 /**
  * Тривиальная
  *
@@ -101,6 +104,7 @@ fun thirdDigit(number: Int): Int {
     val x = number % 1000
     return x / 100
 }
+
 /**
  * Просто
  * я
@@ -111,6 +115,7 @@ fun thirdDigit(number: Int): Int {
  */
 fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int) =
         (hoursArrive * 60 + minutesArrive) - (hoursDepart * 60 + minutesDepart)
+
 /**
  * Простая
  *
@@ -122,6 +127,7 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
     val d = pow((1 + percent.toDouble() / 100), 3.0)
     return d * initial
 }
+
 /**
  * Простая
  *

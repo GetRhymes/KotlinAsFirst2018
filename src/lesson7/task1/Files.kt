@@ -74,11 +74,11 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    val mapErrorCorrection = mutableMapOf("ы" to "и", "Ы" to "И", "я" to "а", "Я" to "А", "Ю" to "У", "ю" to "у")
-    val writer = File(outputName).bufferedWriter()
+    val mapErrorCorrection = mutableMapOf<Char, Char>('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'Ю' to 'У', 'ю' to 'у')
+    val writer = File(outputName).writer()
     writer.write(File(inputName)
             .readText()
-            .replace(Regex("""(?<=[ЖЧШЩжчшщ])[ыяюЫЯЮ]""")) { mapErrorCorrection[it.value].toString() })
+            .replace(Regex("""(?<=[ЖЧШЩжчшщ])[ыяюЫЯЮ]""")) { mapErrorCorrection[it.value.toCharArray()[0]].toString() })
     writer.close()
 }
 
@@ -100,7 +100,18 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val inpName = File(inputName)
+            .readLines()
+            .map { it.trim() }
+    var indent: String
+    val maxLine = inpName.maxBy { it.length }
+    val writer = File(outputName).bufferedWriter()
+    for (line in inpName) {
+        indent = " ".repeat((maxLine!!.length - line.length) / 2)
+        writer.write("$indent$line")
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
@@ -152,7 +163,25 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val inpString = File(inputName)
+            .readText()
+            .toLowerCase()
+            .replace(Regex("""[^а-яёa-z]+"""), " ")
+            .trim()
+    val listWords = inpString
+            .split(" ")
+            .toList()
+    val mutableMap = mutableMapOf<String, Int>()
+    if (listWords[0] == "") return mapOf()
+    for (word in listWords) {
+        if (mutableMap.containsKey(word))
+            mutableMap[word] = mutableMap[word]!! + 1
+        else
+            mutableMap[word] = 1
+    }
+    return mutableMap.toList().sortedByDescending { it.second }.take(20).toMap()
+}
 
 /**
  * Средняя
@@ -176,7 +205,7 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  *
  * заменяется на
  *
- * Выходной текст: Zzdrавствуy, mир!!!
+ * Выходной текст: Zzdrавствуy, myyr!!!
  *
  * Пример 2.
  *
@@ -190,7 +219,20 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val inpString = File(inputName)
+            .readText()
+            .toCharArray()
+    val writer = File(outputName).bufferedWriter()
+    val remakeDic = mutableMapOf<Char, String>()
+    for ((key, value) in dictionary) remakeDic[key.toLowerCase()] = value.toLowerCase()
+    for (i in inpString)
+        if (Regex("""[А-ЯA-ZЁ]""").matches(i.toString()))
+            if (remakeDic.containsKey(i.toLowerCase())) writer.write(remakeDic[i.toLowerCase()]!!.capitalize())
+            else writer.write(i.toString().capitalize())
+        else
+            if (remakeDic.containsKey(i.toLowerCase())) writer.write(remakeDic[i.toLowerCase()])
+            else writer.write(i.toString())
+    writer.close()
 }
 
 /**
@@ -218,7 +260,30 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val inpString = File(inputName)
+            .readLines()
+            .map { it.toLowerCase() }
+    val uniqueWords = mutableMapOf<String, Int>()
+    for (i in inpString) {
+        val arrayOfSymbol = i
+                .toCharArray()
+                .toSet()
+                .joinToString(separator = "")
+        if (i == arrayOfSymbol)
+            uniqueWords[i] = arrayOfSymbol.length
+    }
+    uniqueWords
+            .toList()
+            .sortedByDescending { it.second }
+            .toMap()
+    val list = mutableListOf<String>()
+    val maxLength = uniqueWords.maxBy { it.value }
+    uniqueWords.forEach {
+        if (it.value == maxLength!!.value) list.add(it.key.capitalize())
+    }
+    val writer = File(outputName).bufferedWriter()
+    writer.write(list.joinToString())
+    writer.close()
 }
 
 /**
