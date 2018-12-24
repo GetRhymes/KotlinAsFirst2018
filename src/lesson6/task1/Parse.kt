@@ -294,11 +294,13 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             when {
                 (commands[count] == '>') -> {
                     startPoint++
+                    if (startPoint >= cells) throw IllegalStateException()
                     count++
                     stopPoint--
                 }
                 (commands[count] == '<') -> {
                     startPoint--
+                    if (startPoint < 0) throw IllegalStateException()
                     count++
                     stopPoint--
                 }

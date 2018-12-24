@@ -144,6 +144,7 @@ fun centerFile(inputName: String, outputName: String) {
 fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val lineList = File(inputName).readLines().map { it.trim() }
+    if (lineList.isEmpty()) return writer.write("")
     val maxLong = lineList.maxBy { it.length }!!.length
     for (line in lineList) {
         val words = Regex("""\s+""").split(line)
@@ -192,7 +193,7 @@ fun top20Words(inputName: String): Map<String, Int> {
     val mutableMap = mutableMapOf<String, Int>()
     if (listWords[0] == "") return mapOf()
     for (word in listWords) {
-        if (mutableMap.containsKey(word))
+        if (mutableMap.getOrDefault(word, 0) != 0)
             mutableMap[word] = mutableMap[word]!! + 1
         else
             mutableMap[word] = 1
@@ -279,14 +280,14 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val inpString = File(inputName)
             .readLines()
-            .map { it.toLowerCase() }
     val uniqueWords = mutableMapOf<String, Int>()
     for (i in inpString) {
         val arrayOfSymbol = i
+                .toLowerCase()
                 .toCharArray()
                 .toSet()
                 .joinToString(separator = "")
-        if (i == arrayOfSymbol)
+        if (i.toLowerCase() == arrayOfSymbol)
             uniqueWords[i] = i.length
     }
     uniqueWords
@@ -296,7 +297,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val list = mutableListOf<String>()
     val maxLength = uniqueWords.maxBy { it.value }
     uniqueWords.forEach {
-        if (it.value == maxLength!!.value) list.add(it.key.capitalize())
+        if (it.value == maxLength!!.value) list.add(it.key)
     }
     val writer = File(outputName).bufferedWriter()
     writer.write(list.joinToString())
