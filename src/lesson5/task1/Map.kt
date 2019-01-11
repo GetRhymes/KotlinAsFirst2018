@@ -26,6 +26,7 @@ fun shoppingListCost(
     return totalCost
 }
 
+
 /**
  * Пример
  *

@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson8.task2
 
 /**
@@ -24,6 +25,7 @@ data class Square(val column: Int, val row: Int) {
     fun notation(): String = TODO()
 }
 
+
 /**
  * Простая
  *
@@ -31,7 +33,14 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square {
+    if (!Regex("""[a-h][1-8]""").matches(notation))
+        throw IllegalArgumentException()
+
+    val column = notation[0] - 'a' + 1
+    val row = notation[1] - '0'
+    return Square(column, row)
+}
 
 /**
  * Простая
@@ -155,7 +164,61 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    val theWayOfTheKing = mutableListOf(start)
+    if (start.column == end.column && start.row == end.row) return theWayOfTheKing
+    var columnWay = end.column - start.column
+    var rowWay = end.row - start.row
+    var lastStep = Square(start.column, start.row)
+    while (columnWay != 0 || rowWay != 0) when {
+        columnWay > 0 && rowWay > 0 -> {
+            lastStep = Square(lastStep.column + 1, lastStep.row + 1)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            columnWay--
+            rowWay--
+        }
+        columnWay < 0 && rowWay > 0 -> {
+            lastStep = Square(lastStep.column - 1, lastStep.row + 1)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            columnWay++
+            rowWay--
+        }
+        columnWay > 0 && rowWay < 0 -> {
+            lastStep = Square(lastStep.column + 1, lastStep.row - 1)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            columnWay--
+            rowWay++
+        }
+        columnWay < 0 && rowWay < 0 -> {
+            lastStep = Square(lastStep.column - 1, lastStep.row - 1)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            columnWay++
+            rowWay++
+        }
+        columnWay == 0 && rowWay < 0 -> {
+            lastStep = Square(lastStep.column, lastStep.row - 1)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            rowWay++
+        }
+        columnWay == 0 && rowWay > 0 -> {
+            lastStep = Square(lastStep.column, lastStep.row + 1)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            rowWay--
+        }
+        columnWay < 0 && rowWay == 0 -> {
+            lastStep = Square(lastStep.column - 1, lastStep.row)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            columnWay++
+        }
+        columnWay > 0 && rowWay == 0 -> {
+            lastStep = Square(lastStep.column + 1, lastStep.row)
+            theWayOfTheKing.add(Square(lastStep.column, lastStep.row))
+            columnWay--
+        }
+    }
+    return theWayOfTheKing
+}
+
 
 /**
  * Сложная
